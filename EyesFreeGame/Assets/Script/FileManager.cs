@@ -5,8 +5,9 @@ using System;
 public class FileManager : MonoBehaviour{
 	
 	StreamWriter sw;
-	string filePath,dataPath;
+	string folderPath,dataPath;
 	FpsCounter fpsCounter;
+	int dataNum = 0;
 
 	void Start()
 	{
@@ -18,16 +19,20 @@ public class FileManager : MonoBehaviour{
 		else
 			dataPath = Application.persistentDataPath + "/";
 		
-		filePath = dataPath + dtNow.Year.ToString () + "_" + 
+		folderPath = dataPath + dtNow.Year.ToString () + "_" + 
 			dtNow.Month.ToString ("00") + dtNow.Day.ToString ("00") + "_" + 
-				dtNow.Hour.ToString ("00") + dtNow.Minute.ToString ("00") + ".csv";
-		Debug.Log (filePath);
+				dtNow.Hour.ToString ("00") + dtNow.Minute.ToString ("00");
+
+		if (!Directory.Exists("Assets/output_images"))
+			Directory.CreateDirectory(folderPath);
+
+		Debug.Log (folderPath);
 	}
 
 	public void dataOutput(Vector3 pos, Vector3 accel, string direction, float radian, string mode){
 		
 		FileInfo fi;
-		fi = new FileInfo(filePath);
+		fi = new FileInfo(folderPath + "/data" + dataNum + ".csv");
 		sw = fi.AppendText();
 		sw.Write (pos.x);
 		sw.Write (',');
@@ -52,12 +57,18 @@ public class FileManager : MonoBehaviour{
 	public void stringOutput(string str)
 	{
 		FileInfo fi;
-		fi = new FileInfo(filePath);
+		fi = new FileInfo(folderPath + "/data" + dataNum + ".csv");
 		sw = fi.AppendText();
 
 		sw.WriteLine (str);
 
 		sw.Flush();
 		sw.Close();
+	}
+
+	public void captureScreen()
+	{
+		Application.CaptureScreenshot (folderPath + "/pic" + dataNum + ".png");
+		dataNum++;
 	}
 }

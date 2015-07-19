@@ -9,6 +9,7 @@ public class TouchSystem : MonoBehaviour {
 	EffectCreator effectCreator;
 	FileManager fileManager;
 	FpsCounter fpsCounter;
+	LineCreator lineCreator;
 
 	Vector3 cursorPos;
 	Vector3 acceleration;
@@ -52,6 +53,7 @@ public class TouchSystem : MonoBehaviour {
 		effectCreator = gameObject.GetComponent<EffectCreator> ();
 		fileManager = gameObject.GetComponent<FileManager> ();
 		fpsCounter = gameObject.GetComponent<FpsCounter>();
+		lineCreator = GameObject.Find ("LineRenderer").GetComponent<LineCreator>();
 	}
 
 
@@ -75,6 +77,7 @@ public class TouchSystem : MonoBehaviour {
 			
 			effectCreator.CreateTrackEffect (cursorPos);
 			tracksList.Add (cursorPos);
+			lineCreator.AddPoint(cursorPos);
 
 			if(nowMode == Mode.TOUCH)
 			{
@@ -118,6 +121,8 @@ public class TouchSystem : MonoBehaviour {
 			directionList.Clear ();
 			acceleration = new Vector3(0,0,0);
 
+			lineCreator.ResetPoint();
+			fileManager.captureScreen();
 
 			break;
 
